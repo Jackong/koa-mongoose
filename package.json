@@ -1,0 +1,33 @@
+{
+  "name": "koa-mongoose",
+  "version": "1.0.0",
+  "description": "mongoose middleware for koa",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --harmony test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jackong/koa-mongoose.git"
+  },
+  "keywords": [
+    "mongoose",
+    "middleware",
+    "koa"
+  ],
+  "author": "jackong <jackongc@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jackong/koa-mongoose/issues"
+  },
+  "homepage": "https://github.com/Jackong/koa-mongoose",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "koa": "^1.0.0",
+    "mocha": "^2.2.5",
+    "supertest-koa-agent": "^0.2.1"
+  },
+  "dependencies": {
+    "mongoose-q": "^0.1.0"
+  }
+}

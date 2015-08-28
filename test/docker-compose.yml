@@ -1,0 +1,7 @@
+mongo:
+  image: mongo:3.1.5
+  volumes:
+      - /data/koa-mongoose:/data/db
+  command: mongod --smallfiles
+  ports:
+      - "27017:27017"
