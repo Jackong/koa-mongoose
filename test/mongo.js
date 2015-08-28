@@ -42,7 +42,37 @@ describe('models', () => {
 })
 
 describe('schemas', () => {
+    var app = koa()
+    app.use(middleware({
+        user: '',
+        pass: '',
+        host: '192.168.59.103',
+        port: 27017,
+        database: 'test',
+        schemas: __dirname + '/schemas',
+        db: {
+            native_parser: true
+        }
+    }))
 
+    app.use(function* (next) {
+        var user = this.document('User', {
+            name: 'jackong',
+            age: 17
+        })
+        var doc1 = yield user.saveQ()
+
+        var User = this.model('User')
+        var doc2 = yield User.findOneQ({name: user.name})
+        this.body = {
+            doc1: doc1,
+            doc2: doc2
+        }
+    })
+
+    it('should be success', done => {
+        done()
+    })
 })
 
 describe('database', () => {
