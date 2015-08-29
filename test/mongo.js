@@ -53,7 +53,7 @@ describe('middleware', () => {
             host: '192.168.59.103',
             port: 27017,
             database: 'test',
-            schemas: __dirname + '/schemas/',
+            schemas: __dirname + '/schemas',
             db: {
                 native_parser: true
             },
@@ -61,13 +61,14 @@ describe('middleware', () => {
         }))
 
         app.use(function* (next) {
-            var user = this.document('User', {
+            var model = this.query.model
+            var user = this.document(model, {
                 name: 'jackong',
                 age: 17
             })
             var doc1 = yield user.saveQ()
 
-            var User = this.model('User')
+            var User = this.model(model)
             var doc2 = yield User.findOneQ({name: user.name})
             this.body = {
                 doc1: doc1,
@@ -75,15 +76,22 @@ describe('middleware', () => {
             }
         })
 
-        it('should be success', done => {
+        it('should be success if model exist', done => {
             request(app)
-            .put('/api/users')
+            .put('/api/users?model=user')
             .expect(200)
             .end((err, res) => {
                 expect(err).to.be.not.exist
                 expect(res.body.doc1).have.property('name', res.body.doc2.name)
                 done()
             })
+        })
+
+        it('should be fail if model not found', done => {
+            request(app)
+            .put('/api/users?model=item')
+            .expect(400, 'Model not found: test.item')
+            .end(done)
         })
     })
 
@@ -103,7 +111,7 @@ describe('middleware', () => {
         }))
 
         app.use(function* (next) {
-            var user = this.document('User', {
+            var user = this.document(this.query.model, {
                 name: 'jackong',
                 age: 17
             })
@@ -114,9 +122,9 @@ describe('middleware', () => {
             }
         })
 
-        it('should be success', done => {
+        it('should be success if model exist', done => {
             request(app)
-            .put('/api/users')
+            .put('/api/users?model=user')
             .set('X-App', 'app')
             .expect(200)
             .end((err, res) => {
@@ -124,6 +132,14 @@ describe('middleware', () => {
                 expect(res.body.user).have.property('name', 'jackong')
                 done()
             })
+        })
+
+        it('should be fail if model not found', done => {
+            request(app)
+            .put('/api/users?model=item')
+            .set('X-App', 'app')
+            .expect(400, 'Model not found: app.item')
+            .end(done)
         })
     })
 
