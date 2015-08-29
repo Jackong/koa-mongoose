@@ -93,6 +93,17 @@ describe('middleware', () => {
             .expect(400, 'Model not found: test.item')
             .end(done)
         })
+
+        it('should be success for sub-model', done => {
+            request(app)
+            .put('/api/users?model=user.pet')
+            .expect(200)
+            .end((err, res) => {
+                expect(err).to.be.not.exist
+                expect(res.body.doc1).have.property('name', res.body.doc2.name)
+                done()
+            })
+        })
     })
 
     describe('with database', () => {
