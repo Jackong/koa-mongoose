@@ -4,6 +4,7 @@ var request = require('supertest-koa-agent');
 var middleware = require('../lib/mongoose')
 var mongoose = require('mongoose-q')()
 var Schema = require('./schemas/user')
+const HOST = process.env.HOST
 
 describe('middleware', () => {
 
@@ -13,7 +14,7 @@ describe('middleware', () => {
         app.use(middleware({
             user: '',
             pass: '',
-            host: '192.168.59.103',
+            host: HOST,
             port: 27017,
             database: 'test',
             db: {
@@ -52,7 +53,7 @@ describe('middleware', () => {
         app.use(middleware({
             user: '',
             pass: '',
-            host: '192.168.59.103',
+            host: HOST,
             port: 27017,
             database: 'test',
             schemas: __dirname + '/schemas',
@@ -115,7 +116,7 @@ describe('middleware', () => {
         app.use(middleware({
             user: '',
             pass: '',
-            host: '192.168.59.103',
+            host: HOST,
             port: 27017,
             database: ctx => ctx.headers['x-app'],
             schemas: __dirname + '/schemas/',
