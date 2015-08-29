@@ -26,6 +26,9 @@ app.use(mongoose({
     database: 'test',
     db: {
         native_parser: true
+    },
+    server: {
+        poolSize: 5
     }
 }))
 
@@ -53,7 +56,12 @@ app.use(mongoose({
     port: 27017,
     database: 'test',
     schemas: './schemas'
-    poolSize: 5
+    db: {
+        native_parser: true
+    },
+    server: {
+        poolSize: 5
+    }
 }))
 
 app.use(function* (next) {
@@ -87,7 +95,12 @@ app.use(mongoose({
         return ctx.headers['x-app']
     },
     schemas: './schemas'
-    poolSize: 5
+    db: {
+        native_parser: true
+    },
+    server: {
+        poolSize: 5
+    }
 }))
 
 app.use(function* (next) {

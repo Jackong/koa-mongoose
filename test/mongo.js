@@ -19,7 +19,9 @@ describe('middleware', () => {
             db: {
                 native_parser: true
             },
-            server: { poolSize: 5 }
+            server: {
+                poolSize: 5
+            }
         }))
 
         app.use(function* (next) {
@@ -57,7 +59,9 @@ describe('middleware', () => {
             db: {
                 native_parser: true
             },
-            server: { poolSize: 5 }
+            server: {
+                poolSize: 5
+            }
         }))
 
         app.use(function* (next) {
@@ -118,7 +122,9 @@ describe('middleware', () => {
             db: {
                 native_parser: true
             },
-            server: { poolSize: 5 }
+            server: {
+                poolSize: 5
+            }
         }))
 
         app.use(function* (next) {
