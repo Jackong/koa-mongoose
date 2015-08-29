@@ -1,6 +1,6 @@
 {
   "name": "koa-mongoose",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "mongoose middleware for koa",
   "main": "index.js",
   "scripts": {
