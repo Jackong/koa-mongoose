@@ -88,7 +88,43 @@ describe('middleware', () => {
     })
 
     describe('with database', () => {
+        var app = koa()
+        app.use(middleware({
+            user: '',
+            pass: '',
+            host: '192.168.59.103',
+            port: 27017,
+            database: ctx => ctx.headers['x-app'],
+            schemas: __dirname + '/schemas/',
+            db: {
+                native_parser: true
+            },
+            server: { poolSize: 5 }
+        }))
 
+        app.use(function* (next) {
+            var user = this.document('User', {
+                name: 'jackong',
+                age: 17
+            })
+            var doc = yield user.saveQ()
+
+            this.body = {
+                user: doc
+            }
+        })
+
+        it('should be success', done => {
+            request(app)
+            .put('/api/users')
+            .set('X-App', 'app')
+            .expect(200)
+            .end((err, res) => {
+                expect(err).to.be.not.exist
+                expect(res.body.user).have.property('name', 'jackong')
+                done()
+            })
+        })
     })
 
 })
