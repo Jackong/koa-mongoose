@@ -100,3 +100,9 @@ app.use(function* (next) {
     this.body = 'OK'
 })
 ```
+
+## Tests
+```shell
+cd test && docker-compose up -d
+npm test
+```
