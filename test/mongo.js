@@ -2,7 +2,7 @@ var expect = require('chai').expect
 var koa = require('koa')
 var request = require('supertest-koa-agent');
 var middleware = require('../lib/mongoose')
-var mongoose = require('mongoose-q')()
+var mongoose = require('mongoose')
 var Schema = require('./schemas/user')
 const HOST = process.env.HOST
 
@@ -12,6 +12,7 @@ describe('middleware', () => {
         var app = koa()
         var User = mongoose.model('User', Schema)
         app.use(middleware({
+            mongoose: mongoose,
             user: '',
             pass: '',
             host: HOST,
@@ -51,6 +52,7 @@ describe('middleware', () => {
     describe('with schemas', () => {
         var app = koa()
         app.use(middleware({
+            mongoose: mongoose,
             user: '',
             pass: '',
             host: HOST,
@@ -114,6 +116,7 @@ describe('middleware', () => {
     describe('with database', () => {
         var app = koa()
         app.use(middleware({
+            mongoose: mongoose,
             user: '',
             pass: '',
             host: HOST,
