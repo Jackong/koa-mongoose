@@ -41,7 +41,7 @@ var mongoose = require('koa-mongoose')
 var User = require('./models/user')
 
 app.use(mongoose({
-    mongoose: require('mongoose'),//custom mongoose
+    mongoose: require('mongoose-q')(),//custom mongoose
     user: '',
     pass: '',
     host: '127.0.0.1',
