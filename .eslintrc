@@ -1,0 +1,39 @@
+{
+    "ecmaFeatures": {
+        "arrowFunctions": true,
+        "classes": true,
+        "defaultParams": true,
+        "destructuring": true,
+        "blockBindings": true,
+        "modules": true,
+        "forOf": true,
+        "restParams": true,
+        "spread": true,
+        "superInFunctions": true,
+        "templateStrings": true,
+        "jsx": true,
+        "experimentalObjectRestSpread": true
+    },
+    "parser": "babel-eslint",
+    "rules": {
+        "eqeqeq": 1,
+        "curly": 2,
+        "semi": [1, "never"],
+        "quotes": [2, "single"],
+        "no-eval": 2,
+        "no-invalid-this": 2,
+        "constructor-super": 2,
+        "no-var": 2,
+        "no-const-assign": 2,
+        "no-class-assign": 2,
+        "no-this-before-super": 2,
+        "prefer-arrow-callback": 2,
+        "prefer-const": 2
+    },
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true,
+        "commonjs": true
+    }
+}
