@@ -17,15 +17,15 @@
 [gittip-image]: https://img.shields.io/gratipay/Jackong.svg
 [gittip-url]: https://gratipay.com/~Jackong
 
-> mongoose middleware for koa
+> mongoose middleware for koa 2
 
 ## Install
 
 [![NPM](https://nodei.co/npm/koa-mongoose.png?downloads=true)](https://nodei.co/npm/koa-mongoose/)
 
 ## Features
-
-* use [mongoose-q](https://github.com/iolo/mongoose-q)
+* upgraded for Koa 2
+* uses upgraded mongoose configured to use native `Promise`
 * use with models
 * use with schemas
 * use with different database
@@ -36,12 +36,12 @@
 ### With models
 
 ```js
-var app = require('koa')()
-var mongoose = require('koa-mongoose')
-var User = require('./models/user')
+const Koa = require('koa')
+const mongoose = require('koa-mongoose')
+const User = require('./models/user')
+const app = new Koa()
 
 app.use(mongoose({
-    mongoose: require('mongoose-q')(),//custom mongoose
     user: '',
     pass: '',
     host: '127.0.0.1',
@@ -55,13 +55,13 @@ app.use(mongoose({
     }
 }))
 
-app.use(function* (next) {
-    var user = new User({
+app.use(async (ctx, next) => {
+    let user = new User({
         account: 'test',
         password: 'test'
     })
-    yield user.saveQ()
-    this.body = 'OK'
+    await user.save()
+    ctx.body = 'OK'
 })
 
 ```
@@ -69,8 +69,9 @@ app.use(function* (next) {
 ### With schemas
 
 ```js
-var app = require('koa')()
-var mongoose = require('koa-mongoose')
+const Koa = require('koa')
+const mongoose = require('koa-mongoose')
+const app = new Koa()
 
 app.use(mongoose({
     username: '',
@@ -78,7 +79,7 @@ app.use(mongoose({
     host: '127.0.0.1',
     port: 27017,
     database: 'test',
-    schemas: './schemas'
+    schemas: './schemas',
     db: {
         native_parser: true
     },
@@ -87,27 +88,29 @@ app.use(mongoose({
     }
 }))
 
-app.use(function* (next) {
-    var User = this.model('User')
-    var user = new User({
+app.use(async (ctx, next) => {
+    let User = ctx.model('User')
+    let user = new User({
         account: 'test',
         password: 'test'
     })
     //or
-    var user = this.document('User', {
+    let user = ctx.document('User', {
         account: 'test',
         password: 'test'
     })
 
-    yield user.saveQ()
-    this.body = 'OK'
+    await user.save()
+    ctx.body = 'OK'
 })
 ```
 
 ### With database
 ```js
-var app = require('koa')()
-var mongoose = require('koa-mongoose')
+const Koa = require('koa')
+const mongoose = require('koa-mongoose')
+
+const app = new Koa()
 
 app.use(mongoose({
     username: '',
@@ -117,7 +120,7 @@ app.use(mongoose({
     database: ctx => {
         return ctx.headers['x-app']
     },
-    schemas: './schemas'
+    schemas: './schemas',
     db: {
         native_parser: true
     },
@@ -126,14 +129,14 @@ app.use(mongoose({
     }
 }))
 
-app.use(function* (next) {
-    var user = this.document('User', {
+app.use(async ctx => {
+    let user = ctx.document('User', {
         account: 'test',
         password: 'test'
     })
 
-    yield user.saveQ()
-    this.body = 'OK'
+    await user.save()
+    ctx.body = 'OK'
 })
 ```
 
