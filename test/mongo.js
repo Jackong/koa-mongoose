@@ -9,7 +9,7 @@ const HOST = process.env.HOST
 describe('middleware', () => {
 
     describe('with models', () => {
-        var app = koa()
+        var app = new koa()
         var User = mongoose.model('User', schema)
         app.use(middleware({
             user: '',
@@ -25,13 +25,13 @@ describe('middleware', () => {
             }
         }))
 
-        app.use(function* (next) {
+        app.use(async (ctx, next) => {
             var user = new User({
                 name: 'jackong',
                 age: 17
             })
-            var doc = yield user.saveQ()
-            this.body = {
+            var doc = await user.save()
+            ctx.body = {
                 user: doc
             }
         })
@@ -49,7 +49,7 @@ describe('middleware', () => {
     })
 
     describe('with schemas', () => {
-        var app = koa()
+        var app = new koa()
         app.use(middleware({
             user: '',
             pass: '',
@@ -65,17 +65,17 @@ describe('middleware', () => {
             }
         }))
 
-        app.use(function* (next) {
-            var model = this.query.model
-            var user = this.document(model, {
+        app.use(async (ctx, next) => {
+            var model = ctx.query.model
+            var user = ctx.document(model, {
                 name: 'jackong',
                 age: 17
             })
-            var doc1 = yield user.saveQ()
+            var doc1 = await user.save()
 
-            var User = this.model(model)
-            var doc2 = yield User.findOneQ({name: user.name})
-            this.body = {
+            var User = ctx.model(model)
+            var doc2 = await User.findOne({name: user.name})
+            ctx.body = {
                 doc1: doc1,
                 doc2: doc2
             }
@@ -112,7 +112,7 @@ describe('middleware', () => {
     })
 
     describe('with database', () => {
-        var app = koa()
+        var app = new koa()
         app.use(middleware({
             user: '',
             pass: '',
@@ -128,14 +128,14 @@ describe('middleware', () => {
             }
         }))
 
-        app.use(function* (next) {
-            var user = this.document(this.query.model, {
+        app.use(async ctx => {
+            var user = ctx.document(ctx.query.model, {
                 name: 'jackong',
                 age: 17
             })
-            var doc = yield user.saveQ()
+            var doc = await user.save()
 
-            this.body = {
+            ctx.body = {
                 user: doc
             }
         })
