@@ -166,6 +166,27 @@ app.use(async (ctx, next) => {
 })
 ```
 
+### With events
+
+```js
+const Koa = require('koa')
+const mongoose = require('koa-mongoose')
+const app = new Koa()
+
+app.use(mongoose({
+    uri:'mongodb://<user>:<pass>@<host>:<port>/<db-name>',
+    mongodbOptions:{
+        poolSize: 5,
+        native_parser: true
+    },
+    events: {
+        connected: ()=>{
+            console.log('hello there')
+        }
+    }
+}))
+```
+
 ## Tests
 ```shell
 cd test && docker-compose up -d
