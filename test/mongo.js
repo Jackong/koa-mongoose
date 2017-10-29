@@ -17,11 +17,9 @@ describe('middleware', () => {
             host: HOST,
             port: 27017,
             database: 'test',
-            db: {
+            mongodbOptions:{
+                poolSize: 5,
                 native_parser: true
-            },
-            server: {
-                poolSize: 5
             }
         }))
 
@@ -48,6 +46,40 @@ describe('middleware', () => {
         })
     })
 
+    describe('with uri', () => {
+        var app = new koa()
+        var User = mongoose.model('User', schema)
+        app.use(middleware({
+            uri:`mongodb://${HOST}:27017/test`,
+            mongodbOptions:{
+                poolSize: 5,
+                native_parser: true
+            }
+        }))
+
+        app.use(async (ctx, next) => {
+            var user = new User({
+                name: 'jackong',
+                age: 17
+            })
+            var doc = await user.save()
+            ctx.body = {
+                user: doc
+            }
+        })
+
+        it('should be success', done => {
+            request(app)
+                .put('/api/users')
+                .expect(200)
+                .end((err, res) => {
+                    expect(err).to.be.not.exist
+                    expect(res.body.user).to.have.property('name', 'jackong')
+                    done()
+                })
+        })
+    })
+
     describe('with schemas', () => {
         var app = new koa()
         app.use(middleware({
@@ -56,12 +88,9 @@ describe('middleware', () => {
             host: HOST,
             port: 27017,
             database: 'test',
-            schemas: __dirname + '/schemas',
-            db: {
+            mongodbOptions:{
+                poolSize: 5,
                 native_parser: true
-            },
-            server: {
-                poolSize: 5
             }
         }))
 
@@ -120,11 +149,9 @@ describe('middleware', () => {
             port: 27017,
             database: ctx => ctx.headers['x-app'],
             schemas: __dirname + '/schemas/',
-            db: {
+            mongodbOptions:{
+                poolSize: 5,
                 native_parser: true
-            },
-            server: {
-                poolSize: 5
             }
         }))
 
