@@ -47,11 +47,9 @@ app.use(mongoose({
     host: '127.0.0.1',
     port: 27017,
     database: 'test',
-    db: {
+    mongodbOptions:{
+        poolSize: 5,
         native_parser: true
-    },
-    server: {
-        poolSize: 5
     }
 }))
 
@@ -80,11 +78,9 @@ app.use(mongoose({
     port: 27017,
     database: 'test',
     schemas: './schemas',
-    db: {
+    mongodbOptions:{
+        poolSize: 5,
         native_parser: true
-    },
-    server: {
-        poolSize: 5
     }
 }))
 
@@ -121,11 +117,9 @@ app.use(mongoose({
         return ctx.headers['x-app']
     },
     schemas: './schemas',
-    db: {
+    mongodbOptions:{
+        poolSize: 5,
         native_parser: true
-    },
-    server: {
-        poolSize: 5
     }
 }))
 
@@ -140,10 +134,63 @@ app.use(async ctx => {
 })
 ```
 
+### With uri
+
+```js
+const Koa = require('koa')
+const mongoose = require('koa-mongoose')
+const app = new Koa()
+
+app.use(mongoose({
+    uri:'mongodb://<user>:<pass>@<host>:<port>/<db-name>',
+    mongodbOptions:{
+        poolSize: 5,
+        native_parser: true
+    }
+}))
+
+app.use(async (ctx, next) => {
+    let User = ctx.model('User')
+    let user = new User({
+        account: 'test',
+        password: 'test'
+    })
+    //or
+    let user = ctx.document('User', {
+        account: 'test',
+        password: 'test'
+    })
+
+    await user.save()
+    ctx.body = 'OK'
+})
+```
+
+### With events
+
+```js
+const Koa = require('koa')
+const mongoose = require('koa-mongoose')
+const app = new Koa()
+
+app.use(mongoose({
+    uri:'mongodb://<user>:<pass>@<host>:<port>/<db-name>',
+    mongodbOptions:{
+        poolSize: 5,
+        native_parser: true
+    },
+    events: {
+        connected: ()=>{
+            console.log('hello there')
+        }
+    }
+}))
+```
+
 ## Tests
 ```shell
 cd test && docker-compose up -d
-HOST=YOUR-DOCKER-HOST npm test
+HOST=YOUR-DOCKER-HOST-WITHOUT-PORT npm test
 ```
 
 ## Licences
